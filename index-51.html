@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="theme-color" content="#0F1923"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Debo-One"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"/>
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png"/>
+<title>🌸Debo-One🌹 · Gestion</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+body{background:#0F1923;font-family:'Segoe UI',sans-serif;color:#fff;min-height:100vh}
+input,select,button,textarea{font-family:inherit;outline:none}
+input::placeholder,textarea::placeholder{color:#404B56}
+select option{background:#0F1923;color:#fff}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:#2D3748;border-radius:2px}
+
+#app{max-width:480px;margin:0 auto;min-height:100vh;background:#0F1923;position:relative}
+#header{background:#0F1923;border-bottom:1px solid #1A2332;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100}
+#hdr-left{display:flex;flex-direction:column}
+#hdr-title{color:#7EC8A4;font-weight:800;font-size:15px;letter-spacing:.3px;cursor:pointer;user-select:none}
+#hdr-sub{color:#606B76;font-size:9px;margin-top:1px}
+#hdr-right{display:flex;gap:6px;align-items:center}
+#hdr-alert{background:#C0392B;color:#fff;border-radius:10px;font-size:9px;padding:3px 7px;font-weight:700;display:none}
+#hdr-reset{background:#2D1B1B;color:#E74C3C;border:1px solid #C0392B;border-radius:8px;font-size:9px;padding:4px 8px;cursor:pointer;font-weight:700;display:none}
+#hdr-premium-badge{background:#6B3A9E;color:#fff;border-radius:10px;font-size:9px;padding:3px 7px;font-weight:700;display:none}
+#breadcrumb{padding:8px 14px 4px;color:#888;font-size:11px;border-bottom:1px solid #1A2332;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+#content{padding-bottom:82px;min-height:calc(100vh - 110px)}
+.module{padding:0 12px}
+
+/* NAV */
+#nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#0F1923;border-top:1px solid #1A2332;display:flex;z-index:200}
+.nb{flex:1;background:none;border:none;padding:6px 2px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;position:relative}
+.nb-icon{font-size:17px;line-height:1}
+.nb-label{font-size:8px;color:#606B76;font-weight:400}
+.nb.active .nb-label{color:#7EC8A4;font-weight:700}
+.nb-ind{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:18px;height:2px;background:#7EC8A4;border-radius:2px;display:none}
+.nb.active .nb-ind{display:block}
+.nb-badge{position:absolute;top:3px;right:50%;margin-right:-16px;background:#E74C3C;color:#fff;border-radius:8px;font-size:8px;padding:0 4px;font-weight:700;display:none}
+
+/* CARDS */
+.card{background:#1A2332;border-radius:10px;padding:12px;margin-bottom:8px}
+.ct{color:#7EC8A4;font-weight:700;font-size:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.kpi{background:#1A2332;border-radius:10px;padding:12px}
+.kpi-ic{font-size:20px;margin-bottom:3px}
+.kpi-v{font-weight:700;font-size:14px}
+.kpi-l{color:#A0ADB8;font-size:10px;margin-top:2px}
+.kpi-s{color:#606B76;font-size:9px;margin-top:1px}
+
+/* FORMS */
+.inp{width:100%;background:#0F1923;border:1px solid #2D3748;border-radius:6px;padding:7px 10px;color:#fff;font-size:12px;margin-bottom:6px;display:block}
+.inp:focus{border-color:#7EC8A4}
+.sel{width:100%;background:#0F1923;border:1px solid #2D3748;border-radius:6px;padding:7px 10px;color:#fff;font-size:12px;margin-bottom:6px}
+.btn{border:none;border-radius:8px;padding:10px 0;font-weight:700;cursor:pointer;font-size:12px;width:100%}
+.bg{background:#1B6B3A;color:#fff}
+.br{background:#C0392B;color:#fff}
+.bgr{background:#2D3748;color:#ccc}
+.bo{background:#E8711A;color:#fff}
+.bp{background:#6B3A9E;color:#fff}
+.bb{background:#1A4A7A;color:#fff}
+.btn:disabled{background:#2D3748;color:#606B76;cursor:default}
+.bsm{padding:5px 9px;font-size:10px;border-radius:6px;font-weight:600;cursor:pointer;border:none;font-family:inherit}
+.del-btn{background:#2D1B1B;color:#E74C3C;border:none;border-radius:6px;padding:5px 9px;font-size:11px;cursor:pointer}
+
+/* LISTS */
+.lr{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #2D3748;padding:7px 0;font-size:11px}
+.lr:last-child{border-bottom:none}
+.tag{border-radius:10px;font-size:9px;padding:2px 7px;font-weight:700}
+
+/* PILLS */
+.pills{display:flex;gap:5px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px}
+.pills::-webkit-scrollbar{height:0}
+.pill{background:#1A2332;color:#aaa;border:none;border-radius:18px;padding:5px 11px;cursor:pointer;font-size:10px;white-space:nowrap;font-family:inherit}
+.pill.act{background:#E8711A;color:#fff;font-weight:700}
+
+/* ALERT BOX */
+.abox{background:#2D1B1B;border:1px solid #C0392B;border-radius:10px;padding:10px;margin-bottom:10px}
+.atitle{color:#E74C3C;font-weight:700;font-size:12px;margin-bottom:6px}
+
+/* CAISSE */
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px;max-height:190px;overflow-y:auto}
+.pb{background:#1A2332;border:1px solid #2D3748;border-radius:8px;padding:7px 6px;cursor:pointer;text-align:left}
+.pb:active{border-color:#7EC8A4}
+.mrow{display:flex;gap:7px;margin-bottom:7px}
+.mbtn{flex:1;background:#1A2332;color:#aaa;border:1px solid #2D3748;border-radius:8px;padding:7px 0;cursor:pointer;font-size:11px;font-weight:600;font-family:inherit}
+.qb{background:#2D3748;color:#fff;border:none;border-radius:4px;width:28px;height:28px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;font-family:inherit;flex-shrink:0;touch-action:manipulation}
+.qb:active{background:#7EC8A4;color:#000}
+
+/* OVERLAY */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;overflow-y:auto;max-width:480px;margin:0 auto}
+
+/* RESET MODAL */
+#reset-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:600;align-items:center;justify-content:center;max-width:480px;margin:0 auto}
+#reset-modal.open{display:flex}
+.rm-box{background:#1A2332;border-radius:14px;padding:20px;margin:20px;border:2px solid #C0392B;width:100%}
+
+/* PREMIUM WALL */
+#premium-wall{display:none;position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:700;overflow-y:auto;max-width:480px;margin:0 auto}
+#premium-wall.open{display:block}
+.pw-box{padding:20px}
+
+/* ADMIN PANEL */
+#admin-panel{display:none;position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:800;overflow-y:auto;max-width:480px;margin:0 auto}
+#admin-panel.open{display:block}
+
+/* CGU OVERLAY */
+#cgu-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:900;overflow-y:auto;max-width:480px;margin:0 auto}
+#cgu-overlay.open{display:block}
+
+/* PRINT A4 */
+@media print{
+  body{background:#fff;color:#000}
+  #app,#header,#nav,#breadcrumb,#content,.overlay{display:none!important}
+  #print-zone{display:block!important}
+}
+#print-zone{display:none}
+
+/* FACTURE THERMIQUE */
+.thermal{font-family:'Courier New',monospace;font-size:12px;color:#000;background:#fff;padding:10px;max-width:300px;margin:0 auto}
+.thermal hr{border:none;border-top:1px dashed #000;margin:6px 0}
+</style>
+</head>
+<body>
+<div id="app">
+
+<div id="header">
+  <div id="hdr-left">
+    <div id="hdr-title" onclick="titleClick()">🌸 Debo-One 🌹</div>
+    <div id="hdr-sub">Gestion commerciale · FCFA</div>
+  </div>
+  <div id="hdr-right">
+    <div id="hdr-alert"></div>
+    <div id="hdr-premium-badge">👑 Premium</div>
+    <button id="hdr-reset" onclick="openResetModal()">🔄 Reset</button>
+  </div>
+</div>
+
+<div id="breadcrumb"><span id="bc-text"></span></div>
+<div id="content"></div>
+<div id="nav"></div>
+
+<!-- REÇU VENTE -->
+<div id="recu-overlay" class="overlay">
+  <div style="padding:16px">
+    <div style="background:#1A2332;border-radius:12px;padding:20px;border:2px solid #1B6B3A;text-align:center">
+      <div style="font-size:44px;margin-bottom:8px">✅</div>
+      <div style="color:#7EC8A4;font-weight:700;font-size:17px;margin-bottom:3px">Vente enregistrée</div>
+      <div id="recu-info" style="color:#aaa;font-size:12px;margin-bottom:12px"></div>
+      <div id="recu-lines"></div>
+      <div id="recu-total" style="border-top:1px solid #2D3748;margin-top:8px;padding-top:10px;color:#E8711A;font-weight:700;font-size:19px"></div>
+      <button onclick="fermerRecu()" class="btn bg" style="margin-top:14px;padding:10px 0">➕ Nouvelle vente</button>
+    </div>
+  </div>
+</div>
+
+<!-- FACTURE OVERLAY -->
+<div id="fact-overlay" class="overlay" style="background:#0F1923">
+  <div style="padding:14px">
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <button onclick="closeFact()" class="btn bgr" style="flex:1;padding:8px 0">← Retour</button>
+      <button onclick="imprimerFact()" class="btn bp" style="flex:1;padding:8px 0">🖨️ Imprimer</button>
+      <button onclick="telechargerFact()" class="btn bb" style="flex:1;padding:8px 0">📥 HTML</button>
+    </div>
+    <div id="fact-content"></div>
+    <div id="thermal-content" style="display:none"></div>
+  </div>
+</div>
+
+<!-- RESET MODAL -->
+<div id="reset-modal">
+  <div class="rm-box">
+    <div style="color:#E74C3C;font-weight:800;font-size:16px;text-align:center;margin-bottom:14px">⚠️ Réinitialisation</div>
+    <div style="color:#aaa;font-size:12px;text-align:center;margin-bottom:16px">Choisissez ce que vous voulez effacer.<br>Cette action est <strong style="color:#E74C3C">irréversible</strong>.</div>
+    <div id="reset-options"></div>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button onclick="closeResetModal()" class="btn bgr" style="flex:1;padding:9px 0">Annuler</button>
+      <button onclick="executeReset()" class="btn br" style="flex:1;padding:9px 0">🗑️ Effacer</button>
+    </div>
+  </div>
+</div>
+
+<!-- PREMIUM WALL -->
+<div id="premium-wall">
+  <div class="pw-box">
+    <div style="text-align:center;padding:24px 0 16px">
+      <div style="font-size:48px;margin-bottom:10px">👑</div>
+      <div style="color:#E8711A;font-weight:900;font-size:20px;margin-bottom:6px">Accès Premium</div>
+      <div style="color:#aaa;font-size:12px;margin-bottom:4px">Vous avez utilisé vos 5 accès gratuits</div>
+      <div style="color:#606B76;font-size:11px">Activez Premium pour continuer</div>
+    </div>
+
+    <div style="background:#1A2332;border-radius:12px;padding:16px;margin-bottom:12px;border:2px solid #E8711A">
+      <div style="color:#E8711A;font-weight:800;font-size:15px;margin-bottom:8px;text-align:center">📱 CODES PAR SMS</div>
+      <div style="color:#aaa;font-size:10px;margin-bottom:10px;text-align:center">Fonctionnent sur n'importe quel appareil</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2D3748">
+        <div><div style="color:#fff;font-size:12px;font-weight:600">📱 30 jours</div><div style="color:#7EC8A4;font-size:13px;font-weight:800">7 000 FCFA</div></div>
+        <div style="color:#606B76;font-size:10px">par mois</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2D3748">
+        <div><div style="color:#fff;font-size:12px;font-weight:600">📱 90 jours</div><div style="color:#7EC8A4;font-size:13px;font-weight:800">15 000 FCFA</div></div>
+        <div style="color:#606B76;font-size:10px">3 mois</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0">
+        <div><div style="color:#FFD700;font-size:12px;font-weight:600">👑 1 AN (365 jours)</div><div style="color:#FFD700;font-size:13px;font-weight:800">50 000 FCFA</div></div>
+        <div style="color:#606B76;font-size:10px">meilleur prix</div>
+      </div>
+    </div>
+
+    <div style="background:#1A2332;border-radius:12px;padding:14px;margin-bottom:12px">
+      <div style="color:#7EC8A4;font-weight:800;font-size:13px;margin-bottom:10px;text-align:center">💳 Paiement Mobile Money</div>
+      <div style="display:flex;gap:8px">
+        <div style="flex:1;background:#FF6600;border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:18px;margin-bottom:4px">🟠</div>
+          <div style="color:#fff;font-weight:800;font-size:11px">Orange Money</div>
+          <div style="color:#FFE0B2;font-size:13px;font-weight:700;letter-spacing:1px">74 88 69 51</div>
+        </div>
+        <div style="flex:1;background:#005BBB;border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:18px;margin-bottom:4px">🔵</div>
+          <div style="color:#fff;font-weight:800;font-size:11px">Moov Money</div>
+          <div style="color:#B3D4FF;font-size:13px;font-weight:700;letter-spacing:1px">62 82 12 18</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#1A2332;border-radius:12px;padding:14px;margin-bottom:16px">
+      <div style="color:#ccc;font-weight:700;font-size:12px;margin-bottom:8px">🔑 Entrer votre code d'activation</div>
+      <input id="pw-code-input" class="inp" placeholder="Code d'activation..." style="text-transform:uppercase;letter-spacing:2px;text-align:center;font-size:14px;font-weight:700"/>
+      <button onclick="activerCode()" class="btn bg" style="margin-top:4px">✅ Activer le code</button>
+      <div id="pw-msg" style="margin-top:8px;font-size:11px;text-align:center"></div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <button onclick="closePremiumWall()" class="btn bgr" style="flex:1;padding:9px 0;font-size:11px">← Retour</button>
+      <button onclick="openCGU()" class="btn bb" style="flex:1;padding:9px 0;font-size:11px">📄 CGU</button>
+    </div>
+
+    <div style="text-align:center;color:#404B56;font-size:10px;padding-bottom:20px">
+      © 2026 Ouedraogo Namketa Omar Bertrand · Tous droits réservés
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel">
+  <div style="padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div style="color:#E74C3C;font-weight:900;font-size:16px">🔐 PANNEAU ADMIN</div>
+      <button onclick="closeAdmin()" style="background:#2D3748;color:#ccc;border:none;border-radius:8px;padding:6px 12px;cursor:pointer;font-family:inherit">✕ Fermer</button>
+    </div>
+    <div style="background:#1A2332;border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid #E74C3C">
+      <div style="color:#E74C3C;font-weight:700;font-size:12px;margin-bottom:10px">🔑 Mot de passe admin</div>
+      <input id="admin-pwd-input" class="inp" type="password" placeholder="Mot de passe..."/>
+      <button onclick="verifierAdmin()" class="btn br" style="margin-top:4px">Vérifier</button>
+      <div id="admin-msg" style="margin-top:6px;font-size:11px;text-align:center"></div>
+    </div>
+    <div id="admin-content" style="display:none">
+      <div style="background:#1A2332;border-radius:10px;padding:14px;margin-bottom:12px">
+        <div style="color:#7EC8A4;font-weight:700;font-size:12px;margin-bottom:10px">📲 GÉNÉRATION DE CODES</div>
+        <div style="margin-bottom:10px">
+          <div style="color:#aaa;font-size:11px;margin-bottom:6px">Code SMS partageable (30 jours)</div>
+          <div id="code-sms-30" style="background:#0F1923;border-radius:6px;padding:8px;color:#E8711A;font-weight:700;font-size:13px;letter-spacing:2px;text-align:center;margin-bottom:4px">-</div>
+          <button onclick="genCode('sms',30)" class="btn bp" style="padding:6px 0;font-size:11px">Générer code 30j SMS · 7 000 F</button>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="color:#aaa;font-size:11px;margin-bottom:6px">Code SMS partageable (90 jours)</div>
+          <div id="code-sms-90" style="background:#0F1923;border-radius:6px;padding:8px;color:#E8711A;font-weight:700;font-size:13px;letter-spacing:2px;text-align:center;margin-bottom:4px">-</div>
+          <button onclick="genCode('sms',90)" class="btn bp" style="padding:6px 0;font-size:11px">Générer code 90j SMS · 15 000 F</button>
+        </div>
+        <div style="margin-bottom:10px">
+          <div style="color:#aaa;font-size:11px;margin-bottom:6px">Code SMS partageable (365 jours)</div>
+          <div id="code-sms-365" style="background:#0F1923;border-radius:6px;padding:8px;color:#FFD700;font-weight:700;font-size:13px;letter-spacing:2px;text-align:center;margin-bottom:4px">-</div>
+          <button onclick="genCode('sms',365)" class="btn bg" style="padding:6px 0;font-size:11px">Générer code 365j SMS · 50 000 F</button>
+        </div>
+        <hr style="border-color:#2D3748;margin:12px 0"/>
+        <div style="color:#606B76;font-size:11px;margin-bottom:8px">🖥️ Codes locaux (cet appareil uniquement)</div>
+        <div style="display:flex;gap:7px">
+          <button onclick="genCode('local',30)" class="bsm bgr" style="flex:1;padding:8px 0;font-size:10px">Local 30j</button>
+          <button onclick="genCode('local',90)" class="bsm bgr" style="flex:1;padding:8px 0;font-size:10px">Local 90j</button>
+          <button onclick="genCode('local',365)" class="bsm bgr" style="flex:1;padding:8px 0;font-size:10px">Local 365j</button>
+        </div>
+        <div id="code-local" style="background:#0F1923;border-radius:6px;padding:8px;color:#7EC8A4;font-weight:700;font-size:12px;letter-spacing:2px;text-align:center;margin-top:8px;display:none"></div>
+      </div>
+
+      <div style="background:#1A2332;border-radius:10px;padding:14px;margin-bottom:12px">
+        <div style="color:#7EC8A4;font-weight:700;font-size:12px;margin-bottom:8px">📊 STATUT PREMIUM</div>
+        <div id="admin-status" style="color:#ccc;font-size:12px"></div>
+        <button onclick="revoquerPremium()" class="btn br" style="margin-top:10px;padding:7px 0;font-size:11px">🚫 Révoquer Premium</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CGU OVERLAY -->
+<div id="cgu-overlay">
+  <div style="padding:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="color:#7EC8A4;font-weight:800;font-size:15px">📄 Conditions d'utilisation</div>
+      <button onclick="closeCGU()" style="background:#2D3748;color:#ccc;border:none;border-radius:8px;padding:6px 12px;cursor:pointer;font-family:inherit">✕</button>
+    </div>
+    <div style="background:#1A2332;border-radius:10px;padding:16px;color:#ccc;font-size:12px;line-height:1.7">
+      <div style="color:#7EC8A4;font-weight:700;font-size:13px;margin-bottom:10px">🌸 Debo-One · Gestion Commerciale</div>
+      <div style="color:#E8711A;font-weight:700;margin-bottom:6px">1. Objet</div>
+      <p style="margin-bottom:10px">La présente application Debo-One est un outil de gestion commerciale développé pour les commerçants de la zone UEMOA. Elle permet la gestion des ventes, stocks, crédits clients, dépenses et la facturation.</p>
+      <div style="color:#E8711A;font-weight:700;margin-bottom:6px">2. Accès et utilisation</div>
+      <p style="margin-bottom:10px">L'application est disponible en version gratuite avec 5 accès aux modules premium. Au-delà, un abonnement est requis. Le module Accueil et le module Stock restent accessibles gratuitement sans limitation.</p>
+      <div style="color:#E8711A;font-weight:700;margin-bottom:6px">3. Abonnement Premium</div>
+      <p style="margin-bottom:10px">L'abonnement permet un accès illimité à tous les modules : Caisse, Crédits, Facturation, Comptabilité et Produits. Les tarifs sont : 7 000 FCFA/mois (30j), 15 000 FCFA (90j), 50 000 FCFA (365j). Le paiement s'effectue via Orange Money (74 88 69 51) ou Moov Money (62 82 12 18).</p>
+      <div style="color:#E8711A;font-weight:700;margin-bottom:6px">4. Données et confidentialité</div>
+      <p style="margin-bottom:10px">Toutes vos données sont stockées uniquement sur votre appareil (localStorage). Aucune donnée n'est envoyée vers un serveur externe. Vous êtes seul responsable de la sauvegarde de vos données.</p>
+      <div style="color:#E8711A;font-weight:700;margin-bottom:6px">5. Modules couverts</div>
+      <ul style="padding-left:16px;margin-bottom:10px">
+        <li>🏠 Accueil — Tableau de bord (Gratuit)</li>
+        <li>🛒 Caisse — Enregistrement des ventes (Premium)</li>
+        <li>📦 Stock — Gestion du stock (Gratuit)</li>
+        <li>💳 Crédits — Suivi des crédits clients (Premium)</li>
+        <li>🧾 Facturation — Factures, devis, bons (Premium)</li>
+        <li>📊 Comptabilité — Journal et rapports (Premium)</li>
+        <li>🏷️ Produits — Catalogue produits (Premium)</li>
+      </ul>
+      <div style="color:#E8711A;font-weight:700;margin-bottom:6px">6. Propriété intellectuelle</div>
+      <p style="margin-bottom:10px">Cette application est la propriété exclusive de Ouedraogo Namketa Omar Bertrand. Toute reproduction, modification ou redistribution est interdite sans autorisation écrite de l'auteur.</p>
+      <div style="color:#E8711A;font-weight:700;margin-bottom:6px">7. Limitation de responsabilité</div>
+      <p style="margin-bottom:10px">L'auteur ne saurait être tenu responsable des pertes de données, erreurs de calcul ou pertes commerciales résultant de l'utilisation de l'application. L'utilisateur est invité à vérifier ses données régulièrement.</p>
+      <div style="color:#E8711A;font-weight:700;margin-bottom:6px">8. Loi applicable</div>
+      <p style="margin-bottom:14px">Les présentes conditions sont soumises au droit burkinabè. Tout litige sera soumis aux juridictions compétentes de Ouagadougou, Burkina Faso.</p>
+      <div style="text-align:center;padding-top:12px;border-top:1px solid #2D3748;color:#606B76;font-size:10px">
+        © 2026 Ouedraogo Namketa Omar Bertrand · Tous droits réservés<br>
+        Debo-One · Gestion Commerciale UEMOA<br>
+        Version 6.0 · Burkina Faso
+      </div>
+    </div>
+    <button onclick="closeCGU()" class="btn bg" style="margin-top:12px">✅ J'ai lu et j'accepte</button>
+  </div>
+</div>
+
+</div><!-- #app -->
+
+<div id="print-zone"></div>
+
+<script>
+// ════════════════════════════════════════════════════════
+// STORAGE
+// ════════════════════════════════════════════════════════
+const S={
+  get:k=>{try{return JSON.parse(localStorage.getItem(k))}catch{return null}},
+  set:(k,v)=>localStorage.setItem(k,JSON.stringify(v)),
+  init:(k,def)=>{if(!localStorage.getItem(k))localStorage.setItem(k,JSON.stringify(def));return JSON.parse(localStorage.getItem(k))}
+};
+
+const PROD_DEF=[
+  {id:1,nom:'Riz 5kg',cat:'Céréales',prix:3500,stock:45,seuil:10,unite:'sac'},
+  {id:2,nom:'Huile Palme 1L',cat:'Huiles',prix:1200,stock:60,seuil:15,unite:'bouteille'},
+  {id:3,nom:'Sucre 1kg',cat:'Épicerie',prix:700,stock:8,seuil:10,unite:'kg'},
+  {id:4,nom:'Savon Omo',cat:'Hygiène',prix:500,stock:30,seuil:5,unite:'pièce'},
+  {id:5,nom:'Lait Nido 400g',cat:'Produits laitiers',prix:2800,stock:20,seuil:8,unite:'boîte'},
+  {id:6,nom:'Tomate concentrée',cat:'Conserves',prix:350,stock:50,seuil:10,unite:'boîte'},
+];
+
+// ════════════════════════════════════════════════════════
+// SYSTÈME PREMIUM
+// ════════════════════════════════════════════════════════
+const PREMIUM={
+  // Clé secrète HMAC (pour codes SMS)
+  SECRET:'DEBO2026OMARO',
+
+  // Modules premium (Accueil et Stock = gratuits)
+  MODULES_PREMIUM:['caisse','credits','facturation','compta','produits'],
+  FREE_MODULES:['dashboard','stock'],
+
+  // Admin passwords → durée en jours
+  ADMIN_CODES:{
+    'Omaro 2007':30,
+    'Omaro 1994':90,
+    'Omaro 2013':365
+  },
+
+  isPremium(){
+    const p=S.get('debo_premium');
+    if(!p)return false;
+    // Vérification date réelle du téléphone
+    const now=Date.now();
+    // Anti-manipulation : on vérifie que la date n'a pas reculé
+    const lastCheck=S.get('debo_last_check')||0;
+    if(now < lastCheck - 86400000) return false; // recul > 1 jour = suspect
+    S.set('debo_last_check', now);
+    if(now > p.expiry) return false;
+    return true;
+  },
+
+  getDaysLeft(){
+    const p=S.get('debo_premium');
+    if(!p)return 0;
+    const left=Math.ceil((p.expiry-Date.now())/86400000);
+    return Math.max(0,left);
+  },
+
+  // Compteur d'accès gratuits
+  getCount(){return S.get('debo_free_count')||0},
+  incCount(){S.set('debo_free_count',(this.getCount()+1))},
+  resetCount(){S.set('debo_free_count',0)},
+
+  canAccess(tabId){
+    if(this.FREE_MODULES.includes(tabId))return true;
+    if(this.isPremium())return true;
+    return this.getCount()<5;
+  },
+
+  // Activer premium avec une durée en jours
+  activate(days){
+    const expiry=Date.now()+(days*86400000);
+    S.set('debo_premium',{expiry,days,activatedAt:Date.now()});
+    S.set('debo_last_check',Date.now());
+    this.resetCount();
+  },
+
+  // Générer code SMS (basé sur date + secret)
+  genSMSCode(days){
+    // Format: DEBO-JJJJ-XXXXXXXXXXX
+    // On encode : days + date début (jour) + secret simplifié
+    const today=new Date();
+    const dateStr=today.getFullYear().toString().slice(-2)
+      +(today.getMonth()+1).toString().padStart(2,'0')
+      +today.getDate().toString().padStart(2,'0');
+    // Hash simplifié sans crypto
+    let raw=days+'|'+dateStr+'|'+this.SECRET;
+    let hash=0;
+    for(let i=0;i<raw.length;i++){hash=((hash<<5)-hash+raw.charCodeAt(i))|0}
+    const h=Math.abs(hash).toString(36).toUpperCase().padStart(6,'X').slice(0,6);
+    const d=days.toString().padStart(3,'0');
+    return `DB${d}${dateStr}${h}`;
+  },
+
+  // Générer code local (8 chars)
+  genLocalCode(days){
+    const seed=days+'L'+Date.now().toString(36);
+    let hash=0;
+    for(let i=0;i<seed.length;i++){hash=((hash<<5)-hash+seed.charCodeAt(i))|0}
+    const code=Math.abs(hash).toString(36).toUpperCase().padStart(8,'0').slice(0,8);
+    // Stocker en local
+    const codes=S.get('debo_local_codes')||[];
+    codes.push({code,days,created:Date.now()});
+    S.set('debo_local_codes',codes);
+    return code;
+  },
+
+  // Valider un code entré
+  validateCode(input){
+    const code=input.trim().toUpperCase().replace(/[\s-]/g,'');
+    // 1. Vérifier codes admin
+    const adminVal=Object.entries(this.ADMIN_CODES).find(([k])=>k.toUpperCase()===input.trim().toUpperCase());
+    if(adminVal){this.activate(adminVal[1]);return{ok:true,days:adminVal[1],msg:'Code admin accepté ✅'}}
+    // 2. Vérifier codes SMS (format DB###YYMMDDXXXXXX)
+    if(code.startsWith('DB')&&code.length>=13){
+      const days=parseInt(code.slice(2,5));
+      const dateStr=code.slice(5,11);
+      const hashPart=code.slice(11);
+      // Vérifier en testant les jours valides
+      for(let d of[30,90,365]){
+        if(d===days){
+          // Vérifier que la date est récente (max 30 jours depuis génération)
+          const y=2000+parseInt(dateStr.slice(0,2));
+          const m=parseInt(dateStr.slice(2,4))-1;
+          const day=parseInt(dateStr.slice(4,6));
+          const genDate=new Date(y,m,day).getTime();
+          const ageDays=(Date.now()-genDate)/86400000;
+          if(ageDays<0||ageDays>30){return{ok:false,msg:'Code expiré ou date invalide ❌'}}
+          // Recalculer hash attendu
+          const raw=d+'|'+dateStr+'|'+this.SECRET;
+          let hash=0;
+          for(let i=0;i<raw.length;i++){hash=((hash<<5)-hash+raw.charCodeAt(i))|0}
+          const expectedH=Math.abs(hash).toString(36).toUpperCase().padStart(6,'X').slice(0,6);
+          if(hashPart===expectedH){this.activate(days);return{ok:true,days,msg:`Accès ${days} jours activé ✅`}}
+        }
+      }
+      return{ok:false,msg:'Code SMS invalide ❌'};
+    }
+    // 3. Vérifier codes locaux
+    const locals=S.get('debo_local_codes')||[];
+    const localMatch=locals.find(l=>l.code===code);
+    if(localMatch){
+      // Retirer le code utilisé
+      S.set('debo_local_codes',locals.filter(l=>l.code!==code));
+      this.activate(localMatch.days);
+      return{ok:true,days:localMatch.days,msg:`Code local activé (${localMatch.days}j) ✅`};
+    }
+    return{ok:false,msg:'Code invalide ❌'};
+  }
+};
+
+// ════════════════════════════════════════════════════════
+// PANNEAU ADMIN (3 clics sur le titre)
+// ════════════════════════════════════════════════════════
+let _titleClicks=0,_titleTimer=null;
+function titleClick(){
+  _titleClicks++;
+  clearTimeout(_titleTimer);
+  if(_titleClicks>=3){_titleClicks=0;openAdmin();return}
+  _titleTimer=setTimeout(()=>{_titleClicks=0},1200);
+}
+function openAdmin(){document.getElementById('admin-panel').classList.add('open')}
+function closeAdmin(){document.getElementById('admin-panel').classList.remove('open');document.getElementById('admin-content').style.display='none';document.getElementById('admin-msg').textContent='';document.getElementById('admin-pwd-input').value=''}
+function verifierAdmin(){
+  const pwd=document.getElementById('admin-pwd-input').value.trim();
+  const validPwds=['Omaro 2007','Omaro 1994','Omaro 2013'];
+  if(validPwds.includes(pwd)){
+    document.getElementById('admin-content').style.display='block';
+    document.getElementById('admin-msg').style.color='#7EC8A4';
+    document.getElementById('admin-msg').textContent='✅ Accès autorisé';
+    refreshAdminStatus();
+  }else{
+    document.getElementById('admin-msg').style.color='#E74C3C';
+    document.getElementById('admin-msg').textContent='❌ Mot de passe incorrect';
+  }
+}
+function refreshAdminStatus(){
+  const el=document.getElementById('admin-status');
+  if(PREMIUM.isPremium()){
+    const d=PREMIUM.getDaysLeft();
+    const p=S.get('debo_premium');
+    el.innerHTML=`<div style="color:#7EC8A4;font-weight:700">✅ Premium actif</div><div style="color:#aaa;margin-top:4px">Expire le : ${new Date(p.expiry).toLocaleDateString('fr-FR')}</div><div style="color:#aaa">Jours restants : ${d}</div>`;
+  }else{
+    const c=PREMIUM.getCount();
+    el.innerHTML=`<div style="color:#E74C3C">❌ Pas de Premium</div><div style="color:#aaa;margin-top:4px">Accès gratuits utilisés : ${c}/5</div>`;
+  }
+}
+function genCode(type,days){
+  if(type==='sms'){
+    const code=PREMIUM.genSMSCode(days);
+    const el=document.getElementById(`code-sms-${days}`);
+    if(el){el.textContent=code;el.style.cursor='pointer';el.title='Appuyer pour copier';el.onclick=()=>{try{navigator.clipboard.writeText(code)}catch(e){const t=document.createElement('textarea');t.value=code;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t)}alert('Code copié : '+code)}}
+  }else{
+    const code=PREMIUM.genLocalCode(days);
+    const el=document.getElementById('code-local');
+    el.textContent='Local '+days+'j : '+code;el.style.display='block';
+    el.style.cursor='pointer';el.onclick=()=>alert('Code local : '+code);
+  }
+}
+function revoquerPremium(){
+  if(confirm('Révoquer le Premium ?')){localStorage.removeItem('debo_premium');PREMIUM.resetCount();refreshAdminStatus();render()}}
+
+// ════════════════════════════════════════════════════════
+// PREMIUM WALL
+// ════════════════════════════════════════════════════════
+let _pendingTab=null;
+function showPremiumWall(tabId){
+  _pendingTab=tabId;
+  document.getElementById('pw-code-input').value='';
+  document.getElementById('pw-msg').textContent='';
+  document.getElementById('premium-wall').classList.add('open');
+}
+function closePremiumWall(){
+  document.getElementById('premium-wall').classList.remove('open');
+  _pendingTab=null;
+}
+function activerCode(){
+  const input=document.getElementById('pw-code-input').value;
+  const result=PREMIUM.validateCode(input);
+  const msg=document.getElementById('pw-msg');
+  if(result.ok){
+    msg.style.color='#7EC8A4';msg.textContent=result.msg;
+    setTimeout(()=>{
+      closePremiumWall();
+      updatePremiumUI();
+      if(_pendingTab){APP.tab=_pendingTab;_pendingTab=null;}
+      render();
+    },1200);
+  }else{
+    msg.style.color='#E74C3C';msg.textContent=result.msg;
+  }
+}
+function updatePremiumUI(){
+  const badge=document.getElementById('hdr-premium-badge');
+  const reset=document.getElementById('hdr-reset');
+  if(PREMIUM.isPremium()){
+    badge.style.display='block';
+    badge.textContent=`👑 ${PREMIUM.getDaysLeft()}j`;
+    if(PREMIUM.isPremium())reset.style.display='block';
+  }else{
+    badge.style.display='none';
+    reset.style.display='none';
+  }
+}
+
+// CGU
+function openCGU(){document.getElementById('cgu-overlay').classList.add('open')}
+function closeCGU(){document.getElementById('cgu-overlay').classList.remove('open')}
+
+// ════════════════════════════════════════════════════════
+// ÉTAT GLOBAL
+// ════════════════════════════════════════════════════════
+const APP={
+  tab:'dashboard',
+  produits: S.init('sm_produits',PROD_DEF),
+  ventes:   S.init('sm_ventes',[]),
+  credits:  S.init('sm_credits',[]),
+  depenses: S.init('sm_depenses',[]),
+  mouvements:S.init('sm_mouvements',[]),
+  factures: S.init('sm_factures',[]),
+  config: S.init('sm_config',{boutique:'',adresse:'',telephone:'',email:''}),
+  panier:[],caisseSearch:'',clientNom:'',modeCredit:false,creditAcompte:'',creditEcheance:'',
+  prodSearch:'',prodFormVisible:false,prodEditId:null,prodForm:{nom:'',cat:'',prix:'',stock:'',seuil:'',unite:'pièce'},
+  stockType:'entrée',
+  creditFiltre:'tous',creditPaiementId:null,
+  comptaOnglet:'resume',
+  factOnglet:'liste',factType:'facture',
+  factForm:{client:'',telephone:'',adresse:'',lignes:[{desc:'',qte:1,pu:0}],remise:0,tva:18,note:''},
+  factEditId:null,
+  resetSel:{produits:false,ventes:false,credits:false,depenses:false,mouvements:false,factures:false,config:false},
+};
+
+function save(){
+  S.set('sm_produits',APP.produits);
+  S.set('sm_ventes',APP.ventes);
+  S.set('sm_credits',APP.credits);
+  S.set('sm_depenses',APP.depenses);
+  S.set('sm_mouvements',APP.mouvements);
+  S.set('sm_factures',APP.factures);
+  S.set('sm_config',APP.config);
+}
+
+// ════════════════════════════════════════════════════════
+// AGENTS
+// ════════════════════════════════════════════════════════
+const Agents={
+  alertes:()=>APP.produits.filter(p=>p.stock<=p.seuil),
+  totalVentes:()=>APP.ventes.reduce((s,v)=>s+v.total,0),
+  totalDepenses:()=>APP.depenses.reduce((s,d)=>s+d.montant,0),
+  benefice:()=>Agents.totalVentes()-Agents.totalDepenses(),
+  ventesJour:()=>{const d=new Date().toDateString();return APP.ventes.filter(v=>new Date(v.date).toDateString()===d)},
+  totalDu:()=>APP.credits.filter(c=>!c.solde).reduce((s,c)=>s+c.restant,0),
+  enRetard:()=>APP.credits.filter(c=>!c.solde&&c.echeance&&new Date(c.echeance)<new Date()),
+};
+
+const fmt=n=>new Intl.NumberFormat('fr-FR').format(Math.round(n))+' F';
+const today=()=>new Date().toISOString().split('T')[0];
+const fdate=d=>new Date(d).toLocaleDateString('fr-FR');
+const numFact=()=>'F-'+Date.now().toString().slice(-6);
+
+// ════════════════════════════════════════════════════════
+// RESET MODULE (Premium requis)
+// ════════════════════════════════════════════════════════
+function openResetModal(){
+  if(!PREMIUM.isPremium()){showPremiumWall('reset');return}
+  const modules=[
+    {k:'produits',l:'Produits',ic:'🏷️'},
+    {k:'ventes',l:'Ventes',ic:'🛒'},
+    {k:'credits',l:'Crédits clients',ic:'💳'},
+    {k:'depenses',l:'Dépenses',ic:'💸'},
+    {k:'mouvements',l:'Mouvements stock',ic:'📦'},
+    {k:'factures',l:'Factures & Devis',ic:'🧾'},
+    {k:'config',l:'Infos Boutique',ic:'🏪'},
+  ];
+  const box=document.getElementById('reset-options');
+  box.innerHTML='';
+  modules.forEach(m=>{
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #2D3748';
+    const cb=document.createElement('input');
+    cb.type='checkbox';cb.style.cssText='width:16px;height:16px;cursor:pointer;accent-color:#E74C3C';
+    cb.checked=APP.resetSel[m.k]||false;
+    cb.onchange=e=>APP.resetSel[m.k]=e.target.checked;
+    const lbl=document.createElement('label');
+    lbl.style.cssText='color:#ccc;font-size:12px;cursor:pointer;flex:1';
+    lbl.textContent=m.ic+' '+m.l;
+    lbl.onclick=()=>{cb.checked=!cb.checked;APP.resetSel[m.k]=cb.checked;};
+    row.appendChild(cb);row.appendChild(lbl);
+    box.appendChild(row);
+  });
+  const allRow=document.createElement('div');
+  allRow.style.cssText='margin-top:10px;text-align:center';
+  const btnAll=document.createElement('button');
+  btnAll.className='btn br';btnAll.style.padding='7px 0';
+  btnAll.textContent='☢️ Tout réinitialiser';
+  btnAll.onclick=()=>{Object.keys(APP.resetSel).forEach(k=>APP.resetSel[k]=true);openResetModal()};
+  allRow.appendChild(btnAll);box.appendChild(allRow);
+  document.getElementById('reset-modal').classList.add('open');
+}
+function closeResetModal(){
+  document.getElementById('reset-modal').classList.remove('open');
+  Object.keys(APP.resetSel).forEach(k=>APP.resetSel[k]=false);
+}
+function executeReset(){
+  const m=APP.resetSel;
+  if(m.produits){APP.produits=[...PROD_DEF]}
+  if(m.ventes){APP.ventes=[]}
+  if(m.credits){APP.credits=[]}
+  if(m.depenses){APP.depenses=[]}
+  if(m.mouvements){APP.mouvements=[]}
+  if(m.factures){APP.factures=[]}
+  if(m.config){APP.config={boutique:'',adresse:'',telephone:'',email:''}}
+  save();closeResetModal();render();
+}
+
+// ════════════════════════════════════════════════════════
+// RENDER ENGINE
+// ════════════════════════════════════════════════════════
+const TABS=[
+  {id:'dashboard',icon:'🏠',label:'Accueil'},
+  {id:'caisse',icon:'🛒',label:'Caisse'},
+  {id:'stock',icon:'📦',label:'Stock'},
+  {id:'credits',icon:'💳',label:'Crédits'},
+  {id:'facturation',icon:'🧾',label:'Factures'},
+  {id:'compta',icon:'📊',label:'Compta'},
+  {id:'produits',icon:'🏷️',label:'Produits'},
+];
+
+function navigateTo(tabId){
+  if(PREMIUM.FREE_MODULES.includes(tabId)){
+    APP.tab=tabId;render();return;
+  }
+  if(PREMIUM.canAccess(tabId)){
+    PREMIUM.incCount();
+    APP.tab=tabId;render();
+  }else{
+    showPremiumWall(tabId);
+  }
+}
+
+function render(){
+  updatePremiumUI();
+  const al=Agents.alertes().length;
+  const hda=document.getElementById('hdr-alert');
+  al>0?(hda.textContent=`⚠️ ${al}`,hda.style.display='block'):hda.style.display='none';
+
+  const cur=TABS.find(t=>t.id===APP.tab)||TABS[0];
+  document.getElementById('bc-text').textContent=cur.icon+' '+cur.label.toUpperCase();
+
+  const nav=document.getElementById('nav');
+  nav.innerHTML='';
+  TABS.forEach(t=>{
+    const badge=t.id==='stock'?al:t.id==='credits'?Agents.enRetard().length:0;
+    const isPrem=PREMIUM.MODULES_PREMIUM.includes(t.id);
+    const btn=document.createElement('button');
+    btn.className='nb'+(APP.tab===t.id?' active':'');
+    btn.innerHTML=`<span class="nb-icon">${t.icon}</span><span class="nb-label">${t.label}${isPrem&&!PREMIUM.isPremium()?'🔒':''}</span>${badge>0?`<span class="nb-badge" style="display:block">${badge}</span>`:''}<div class="nb-ind"></div>`;
+    btn.onclick=()=>navigateTo(t.id);
+    nav.appendChild(btn);
+  });
+
+  const c=document.getElementById('content');
+  c.innerHTML='';
+  const m=document.createElement('div');m.className='module';
+  switch(APP.tab){
+    case'dashboard':m.appendChild(rDashboard());break;
+    case'caisse':m.appendChild(rCaisse());break;
+    case'stock':m.appendChild(rStock());break;
+    case'credits':m.appendChild(rCredits());break;
+    case'compta':m.appendChild(rCompta());break;
+    case'produits':m.appendChild(rProduits());break;
+    case'facturation':m.appendChild(rFacturation());break;
+  }
+  c.appendChild(m);
+}
+
+// ════════════════════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════════════════════
+function rDashboard(){
+  const f=document.createDocumentFragment();
+  const al=Agents.alertes(),vj=Agents.ventesJour(),ben=Agents.benefice(),ret=Agents.enRetard();
+  const vjT=vj.reduce((s,v)=>s+v.total,0);
+  const kpis=[
+    {l:"Ventes aujourd'hui",v:fmt(vjT),s:`${vj.length} transaction(s)`,c:'#1B6B3A',ic:'🛒'},
+    {l:'Bénéfice total',v:fmt(ben),s:'Recettes − Dépenses',c:ben>=0?'#1B6B3A':'#C0392B',ic:'📈'},
+    {l:'Crédits en cours',v:fmt(Agents.totalDu()),s:`${ret.length} en retard`,c:'#E8711A',ic:'💳'},
+    {l:'Alertes stock',v:al.length,s:'À réapprovisionner',c:'#C0392B',ic:'⚠️'},
+  ];
+  const grid=document.createElement('div');grid.className='kpi-grid';
+  kpis.forEach(k=>grid.innerHTML+=`<div class="kpi" style="border-left:3px solid ${k.c}"><div class="kpi-ic">${k.ic}</div><div class="kpi-v" style="color:${k.c}">${k.v}</div><div class="kpi-l">${k.l}</div><div class="kpi-s">${k.s}</div></div>`);
+  f.appendChild(grid);
+
+  // Bandeau Premium
+  if(!PREMIUM.isPremium()){
+    const cnt=PREMIUM.getCount();
+    const left=5-cnt;
+    const banner=document.createElement('div');
+    banner.style.cssText='background:linear-gradient(135deg,#6B3A9E,#E8711A);border-radius:10px;padding:12px;margin-bottom:12px;text-align:center';
+    banner.innerHTML=`<div style="color:#fff;font-weight:700;font-size:13px;margin-bottom:4px">👑 Passez en Premium</div>
+      <div style="color:#FFE0B2;font-size:11px;margin-bottom:8px">Accès gratuits restants : <strong>${left}</strong>/5</div>
+      <div style="color:#fff;font-size:11px;margin-bottom:8px">7 000 FCFA/mois · Orange Money 74 88 69 51</div>
+      <button onclick="showPremiumWall('dashboard')" style="background:#fff;color:#6B3A9E;border:none;border-radius:8px;padding:7px 18px;font-weight:800;cursor:pointer;font-size:12px;font-family:inherit">Activer maintenant</button>`;
+    f.appendChild(banner);
+  }else{
+    const d=PREMIUM.getDaysLeft();
+    const banner=document.createElement('div');
+    banner.style.cssText='background:#1A2332;border-radius:10px;padding:10px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;border-left:3px solid #FFD700';
+    banner.innerHTML=`<div><div style="color:#FFD700;font-weight:700;font-size:12px">👑 Premium actif</div><div style="color:#aaa;font-size:10px;margin-top:2px">${d} jour(s) restant(s)</div></div><div style="color:#7EC8A4;font-size:18px">✅</div>`;
+    f.appendChild(banner);
+  }
+
+  if(al.length>0){
+    const box=document.createElement('div');box.className='abox';
+    box.innerHTML=`<div class="atitle">⚠️ Rupture imminente</div>`+al.map(p=>`<div class="lr"><span style="color:#ccc">${p.nom}</span><span style="color:${p.stock===0?'#E74C3C':'#E8711A'}">${p.stock} ${p.unite}(s)</span></div>`).join('');
+    f.appendChild(box);
+  }
+  const card=document.createElement('div');card.className='card';
+  card.innerHTML=`<div class="ct">📊 Dernières ventes</div>`+(APP.ventes.length===0?'<div style="color:#606B76;font-size:11px;text-align:center;padding:10px">Aucune vente</div>':[...APP.ventes].slice(-5).reverse().map(v=>`<div class="lr"><span style="color:#ccc">#${v.id} · ${v.client}</span><span style="color:#7EC8A4;font-weight:600">${fmt(v.total)}</span></div>`).join(''));
+  f.appendChild(card);
+
+  // Footer copyright
+  const copy=document.createElement('div');
+  copy.style.cssText='text-align:center;color:#404B56;font-size:10px;padding:16px 0 4px';
+  copy.innerHTML='© 2026 Ouedraogo Namketa Omar Bertrand<br><span style="cursor:pointer;text-decoration:underline" onclick="openCGU()">Conditions d\'utilisation</span>';
+  f.appendChild(copy);
+  return f;
+}
+
+// ════════════════════════════════════════════════════════
+// CAISSE
+// ════════════════════════════════════════════════════════
+function rCaisse(){
+  const f=document.createDocumentFragment();
+  const si=document.createElement('input');
+  si.className='inp';si.placeholder='🔍 Chercher un produit...';si.value=APP.caisseSearch;si.style.marginBottom='8px';
+  si.oninput=e=>{APP.caisseSearch=e.target.value;renderPGrid(grid)};
+  f.appendChild(si);
+  const grid=document.createElement('div');grid.className='pg';
+  renderPGrid(grid);f.appendChild(grid);
+  const pc=document.createElement('div');pc.id='panier-card';renderPanierUI(pc);f.appendChild(pc);
+  const ci=document.createElement('input');ci.className='inp';ci.placeholder='Nom client (optionnel)';ci.value=APP.clientNom;ci.oninput=e=>APP.clientNom=e.target.value;f.appendChild(ci);
+  const mr=document.createElement('div');mr.className='mrow';
+  ['Comptant','Crédit'].forEach((l,i)=>{
+    const b=document.createElement('button');b.className='mbtn';
+    b.textContent=(i===0?'💵 ':'💳 ')+l;
+    const isC=i===1;
+    if(APP.modeCredit===isC){b.style.background=isC?'#E8711A':'#1B6B3A';b.style.color='#fff';b.style.borderColor=isC?'#E8711A':'#1B6B3A';}
+    b.onclick=()=>{APP.modeCredit=isC;render()};
+    mr.appendChild(b);
+  });
+  f.appendChild(mr);
+  if(APP.modeCredit){
+    const cb=document.createElement('div');cb.className='card';cb.style.padding='10px';cb.style.marginBottom='8px';
+    const ai=document.createElement('input');ai.className='inp';ai.type='number';ai.placeholder='Acompte versé (FCFA)';ai.value=APP.creditAcompte;ai.oninput=e=>APP.creditAcompte=e.target.value;
+    const ei=document.createElement('input');ei.className='inp';ei.style.marginBottom='0';ei.type='date';ei.value=APP.creditEcheance;ei.oninput=e=>APP.creditEcheance=e.target.value;
+    cb.appendChild(ai);cb.appendChild(ei);f.appendChild(cb);
+  }
+  const total=APP.panier.reduce((s,i)=>s+i.prix*i.qte,0);
+  const bv=document.createElement('button');
+  bv.className='btn'+(APP.panier.length>0?' bg':' bgr');bv.style.fontSize='15px';bv.style.padding='13px 0';
+  bv.disabled=APP.panier.length===0;bv.textContent=`✅ Valider · ${fmt(total)}`;
+  bv.onclick=validerVente;f.appendChild(bv);
+  return f;
+}
+function renderPGrid(grid){
+  grid.innerHTML='';
+  const q=APP.caisseSearch.toLowerCase();
+  APP.produits.filter(p=>p.stock>0&&(p.nom.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q))).forEach(p=>{
+    const b=document.createElement('button');b.className='pb';
+    b.innerHTML=`<div style="color:#fff;font-size:11px;font-weight:600;margin-bottom:3px">${p.nom}</div><div style="display:flex;justify-content:space-between"><span style="color:#E8711A;font-size:11px;font-weight:700">${fmt(p.prix)}</span><span style="color:${p.stock<=p.seuil?'#E74C3C':'#606B76'};font-size:10px">×${p.stock}</span></div>`;
+    b.onclick=()=>{
+      const ex=APP.panier.find(i=>i.id===p.id);
+      if(ex){if(ex.qte<p.stock)ex.qte++;}else APP.panier.push({id:p.id,nom:p.nom,prix:p.prix,qte:1});
+      const pc=document.getElementById('panier-card');if(pc)renderPanierUI(pc);
+      updateVBtn();
+    };
+    grid.appendChild(b);
+  });
+}
+function renderPanierUI(card){
+  card.innerHTML='';card.className='card';card.style.marginBottom='8px';
+  if(APP.panier.length===0){card.style.display='none';return;}
+  card.style.display='block';
+  const titre=document.createElement('div');titre.className='ct';
+  titre.innerHTML=`🛒 Panier <span style="color:#E8711A">${APP.panier.length} article(s)</span>`;
+  card.appendChild(titre);
+  APP.panier.forEach(item=>{
+    const p=APP.produits.find(x=>x.id===item.id);
+    const row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:6px;margin-bottom:6px';
+    const nm=document.createElement('span');nm.style.cssText='flex:1;color:#ccc;font-size:11px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';nm.textContent=item.nom;
+    // Bouton −
+    const bm=document.createElement('button');bm.className='qb';bm.textContent='−';bm.type='button';
+    bm.addEventListener('click',function(e){
+      e.stopPropagation();
+      if(item.qte<=1)APP.panier=APP.panier.filter(i=>i.id!==item.id);
+      else item.qte--;
+      renderPanierUI(card);updateVBtn();
+    });
+    const qt=document.createElement('span');qt.style.cssText='color:#fff;font-size:12px;min-width:22px;text-align:center;font-weight:700';qt.textContent=item.qte;
+    // Bouton +
+    const bp=document.createElement('button');bp.className='qb';bp.textContent='+';bp.type='button';
+    bp.addEventListener('click',function(e){
+      e.stopPropagation();
+      if(p&&item.qte<p.stock){item.qte++;renderPanierUI(card);updateVBtn();}
+    });
+    const pr=document.createElement('span');pr.style.cssText='color:#E8711A;font-size:11px;min-width:60px;text-align:right;font-weight:600';pr.textContent=fmt(item.prix*item.qte);
+    const bd=document.createElement('button');bd.className='qb';bd.style.background='#2D1B1B';bd.style.color='#E74C3C';bd.textContent='✕';bd.type='button';
+    bd.addEventListener('click',function(e){
+      e.stopPropagation();
+      APP.panier=APP.panier.filter(i=>i.id!==item.id);
+      renderPanierUI(card);updateVBtn();
+    });
+    row.appendChild(nm);row.appendChild(bm);row.appendChild(qt);row.appendChild(bp);row.appendChild(pr);row.appendChild(bd);
+    card.appendChild(row);
+  });
+  const tot=APP.panier.reduce((s,i)=>s+i.prix*i.qte,0);
+  const totDiv=document.createElement('div');
+  totDiv.style.cssText='border-top:1px solid #2D3748;padding-top:6px;display:flex;justify-content:space-between;margin-top:4px';
+  totDiv.innerHTML=`<span style="color:#aaa;font-size:12px">Total</span><span style="color:#E8711A;font-weight:700;font-size:15px">${fmt(tot)}</span>`;
+  card.appendChild(totDiv);
+}
+function updateVBtn(){
+  const tot=APP.panier.reduce((s,i)=>s+i.prix*i.qte,0);
+  // Chercher le bouton valider dans le module content
+  const btns=document.querySelectorAll('#content .btn');
+  let bv=null;
+  btns.forEach(b=>{if(b.textContent.includes('Valider'))bv=b});
+  if(!bv)return;
+  bv.disabled=APP.panier.length===0;bv.className='btn'+(APP.panier.length>0?' bg':' bgr');
+  bv.textContent=`✅ Valider · ${fmt(tot)}`;
+}
+function validerVente(){
+  if(APP.panier.length===0)return;
+  const total=APP.panier.reduce((s,i)=>s+i.prix*i.qte,0);
+  const id=APP.ventes.length+1;
+  const v={id,client:APP.clientNom||'Comptant',panier:[...APP.panier],total,date:new Date().toISOString(),type:APP.modeCredit?'crédit':'comptant'};
+  APP.ventes.push(v);
+  APP.panier.forEach(item=>{const p=APP.produits.find(x=>x.id===item.id);if(p)p.stock-=item.qte});
+  if(APP.modeCredit){
+    const acc=+(APP.creditAcompte||0);
+    APP.credits.push({id:Date.now(),client:APP.clientNom||'Client',total,acompte:acc,restant:total-acc,echeance:APP.creditEcheance||'',solde:false,venteId:id,date:new Date().toISOString()});
+  }
+  save();showRecu(v);
+  APP.panier=[];APP.clientNom='';APP.creditAcompte='';APP.creditEcheance='';APP.modeCredit=false;
+}
+function showRecu(v){
+  document.getElementById('recu-info').textContent=`#${v.id} · ${v.client}`;
+  document.getElementById('recu-lines').innerHTML=v.panier.map(i=>`<div style="display:flex;justify-content:space-between;color:#aaa;font-size:12px;padding:2px 0"><span>${i.nom} × ${i.qte}</span><span>${fmt(i.prix*i.qte)}</span></div>`).join('');
+  document.getElementById('recu-total').textContent=fmt(v.total);
+  document.getElementById('recu-overlay').style.display='block';
+}
+function fermerRecu(){document.getElementById('recu-overlay').style.display='none';render()}
+
+// ════════════════════════════════════════════════════════
+// STOCK
+// ════════════════════════════════════════════════════════
+function rStock(){
+  const f=document.createDocumentFragment();
+  const fc=document.createElement('div');fc.className='card';
+  fc.innerHTML=`<div class="ct">📦 Mouvement de stock</div>`;
+  const tr=document.createElement('div');tr.className='mrow';
+  ['entrée','sortie'].forEach(t=>{
+    const b=document.createElement('button');b.className='mbtn';
+    b.textContent=t==='entrée'?'➕ Entrée':'➖ Sortie';
+    if(APP.stockType===t){b.style.background=t==='entrée'?'#1B6B3A':'#C0392B';b.style.color='#fff';}
+    b.onclick=()=>{APP.stockType=t;render()};
+    tr.appendChild(b);
+  });
+  fc.appendChild(tr);
+  const sp=document.createElement('select');sp.className='sel';sp.id='st-p';
+  sp.innerHTML='<option value="">Choisir un produit...</option>'+APP.produits.map(p=>`<option value="${p.id}">${p.nom} (stock: ${p.stock})</option>`).join('');
+  const qi=document.createElement('input');qi.className='inp';qi.type='number';qi.placeholder='Quantité';qi.id='st-q';
+  const ni=document.createElement('input');ni.className='inp';ni.placeholder='Motif / Note';ni.id='st-n';
+  const bs=document.createElement('button');bs.className=`btn ${APP.stockType==='entrée'?'bg':'br'}`;bs.textContent='Enregistrer le mouvement';
+  bs.onclick=()=>{
+    const pid=+sp.value,qte=+qi.value,note=ni.value;
+    if(!pid||!qte)return;
+    const p=APP.produits.find(x=>x.id===pid);if(!p)return;
+    if(APP.stockType==='sortie'&&qte>p.stock){alert('Stock insuffisant');return}
+    p.stock+=APP.stockType==='entrée'?qte:-qte;
+    APP.mouvements.push({id:Date.now(),produit:p.nom,type:APP.stockType,qte,note,date:new Date().toISOString()});
+    save();render();
+  };
+  [sp,qi,ni,bs].forEach(e=>fc.appendChild(e));f.appendChild(fc);
+
+  const al=Agents.alertes();
+  if(al.length>0){
+    const ab=document.createElement('div');ab.className='abox';
+    ab.innerHTML=`<div class="atitle">⚠️ Stocks critiques</div>`+al.map(p=>`<div class="lr"><span style="color:#ccc">${p.nom}</span><span style="color:#E8711A">${p.stock}/${p.seuil}</span></div>`).join('');
+    f.appendChild(ab);
+  }
+
+  const tc=document.createElement('div');tc.className='card';
+  tc.innerHTML=`<div class="ct">📋 État du stock <span style="color:#606B76;font-size:10px">${APP.produits.length} articles</span></div>`
+    +APP.produits.map(p=>`<div class="lr">
+      <div><div style="color:#fff;font-size:11px;font-weight:500">${p.nom}</div><div style="color:#606B76;font-size:9px">${p.cat}</div></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="text-align:right"><div style="color:${p.stock<=p.seuil?'#E74C3C':'#7EC8A4'};font-weight:700;font-size:13px">${p.stock}</div><div style="color:#606B76;font-size:9px">${p.unite}</div></div>
+      </div>
+    </div>`).join('');
+  f.appendChild(tc);
+
+  if(APP.mouvements.length>0){
+    const hc=document.createElement('div');hc.className='card';
+    hc.innerHTML=`<div class="ct">🔄 Historique <button class="del-btn" onclick="if(confirm('Vider l historique ?')){APP.mouvements=[];save();render()}">🗑️ Vider</button></div>`
+      +[...APP.mouvements].slice(-10).reverse().map(m=>`<div class="lr" style="font-size:10px"><span style="color:${m.type==='entrée'?'#7EC8A4':'#E74C3C'}">${m.type==='entrée'?'⬆':'⬇'} ${m.produit}</span><span style="color:#aaa">×${m.qte} · ${fdate(m.date)}</span></div>`).join('');
+    f.appendChild(hc);
+  }
+  return f;
+}
+
+// ════════════════════════════════════════════════════════
+// CRÉDITS
+// ════════════════════════════════════════════════════════
+function rCredits(){
+  const f=document.createDocumentFragment();
+  const pills=document.createElement('div');pills.className='pills';
+  [['tous','Tous'],['en_cours','En cours'],['retard','⚠️ Retard'],['solde','Soldés']].forEach(([k,l])=>{
+    const b=document.createElement('button');b.className='pill'+(APP.creditFiltre===k?' act':'');b.textContent=l;
+    b.onclick=()=>{APP.creditFiltre=k;render()};pills.appendChild(b);
+  });
+  f.appendChild(pills);
+  const st=document.createElement('div');st.className='card';st.style.display='flex';st.style.justifyContent='space-between';
+  st.innerHTML=`<div style="text-align:center"><div style="color:#E74C3C;font-weight:700;font-size:14px">${fmt(Agents.totalDu())}</div><div style="color:#606B76;font-size:9px">Total dû</div></div>
+    <div style="text-align:center"><div style="color:#E8711A;font-weight:700;font-size:14px">${APP.credits.filter(c=>!c.solde).length}</div><div style="color:#606B76;font-size:9px">En cours</div></div>
+    <div style="text-align:center"><div style="color:#E74C3C;font-weight:700;font-size:14px">${Agents.enRetard().length}</div><div style="color:#606B76;font-size:9px">En retard</div></div>`;
+  f.appendChild(st);
+
+  let liste=APP.credits;
+  if(APP.creditFiltre==='en_cours')liste=APP.credits.filter(c=>!c.solde);
+  else if(APP.creditFiltre==='retard')liste=Agents.enRetard();
+  else if(APP.creditFiltre==='solde')liste=APP.credits.filter(c=>c.solde);
+
+  if(liste.length===0){const e=document.createElement('div');e.style.cssText='color:#606B76;text-align:center;padding:28px 0;font-size:12px';e.textContent='Aucun crédit';f.appendChild(e);return f}
+
+  liste.forEach(c=>{
+    const enR=!c.solde&&c.echeance&&new Date(c.echeance)<new Date();
+    const card=document.createElement('div');card.className='card';
+    card.style.borderLeft=`3px solid ${c.solde?'#1B6B3A':enR?'#E74C3C':'#E8711A'}`;card.style.marginBottom='8px';
+    card.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:4px">
+      <span style="color:#fff;font-weight:600;font-size:13px">${c.client}</span>
+      <div style="display:flex;gap:5px;align-items:center">
+        <span class="tag" style="background:${c.solde?'#1B6B3A':enR?'#C0392B':'#7A4A1A'}">${c.solde?'✅ Soldé':enR?'⚠️ Retard':'⏳ En cours'}</span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:${c.echeance?'4':'0'}px">
+      <span style="color:#aaa;font-size:10px">Total: ${fmt(c.total)}</span>
+      <span style="color:#E74C3C;font-weight:600;font-size:11px">Restant: ${fmt(c.restant)}</span>
+    </div>
+    ${c.echeance?`<div style="color:#606B76;font-size:10px;margin-bottom:5px">Échéance: ${fdate(c.echeance)}</div>`:''}`;
+    const brow=document.createElement('div');brow.style.display='flex';brow.style.gap='5px';brow.style.marginTop='6px';
+    if(!c.solde){
+      if(APP.creditPaiementId===c.id){
+        const row2=document.createElement('div');row2.style.display='flex';row2.style.gap='5px';
+        const inp=document.createElement('input');inp.className='inp';inp.type='number';inp.placeholder='Montant payé';inp.value=c.restant;inp.style.cssText='flex:1;margin-bottom:0';
+        const bOk=document.createElement('button');bOk.className='bsm bg';bOk.textContent='✓';
+        bOk.onclick=()=>{const m=+inp.value;if(!m)return;c.restant=Math.max(0,c.restant-m);if(c.restant===0)c.solde=true;APP.creditPaiementId=null;save();render()};
+        const bAn=document.createElement('button');bAn.className='bsm bgr';bAn.textContent='✕';
+        bAn.onclick=()=>{APP.creditPaiementId=null;render()};
+        row2.appendChild(inp);row2.appendChild(bOk);row2.appendChild(bAn);brow.appendChild(row2);
+      }else{
+        const bp=document.createElement('button');bp.className='btn bg';bp.style.cssText='flex:1;padding:6px 0;font-size:11px';bp.textContent='💵 Paiement';
+        bp.onclick=()=>{APP.creditPaiementId=c.id;render()};brow.appendChild(bp);
+      }
+    }
+    const bDel=document.createElement('button');bDel.className='del-btn';bDel.textContent='🗑️';
+    bDel.onclick=()=>{if(confirm('Supprimer ce crédit ?')){APP.credits=APP.credits.filter(x=>x.id!==c.id);save();render()}};
+    brow.appendChild(bDel);card.appendChild(brow);f.appendChild(card);
+  });
+  return f;
+}
+
+// ════════════════════════════════════════════════════════
+// COMPTABILITÉ
+// ════════════════════════════════════════════════════════
+function rCompta(){
+  const f=document.createDocumentFragment();
+  const tabs=document.createElement('div');tabs.style.cssText='display:flex;gap:6px;margin-bottom:10px';
+  [['resume','Résumé'],['depenses','Dépenses'],['journal','Journal']].forEach(([k,l])=>{
+    const b=document.createElement('button');
+    b.style.cssText=`flex:1;background:${APP.comptaOnglet===k?'#1B6B3A':'#1A2332'};color:#fff;border:none;border-radius:8px;padding:7px 0;cursor:pointer;font-size:10px;font-weight:${APP.comptaOnglet===k?700:400};font-family:inherit`;
+    b.textContent=l;b.onclick=()=>{APP.comptaOnglet=k;render()};
+    tabs.appendChild(b);
+  });f.appendChild(tabs);
+
+  const tR=Agents.totalVentes(),tD=Agents.totalDepenses(),ben=Agents.benefice();
+  if(APP.comptaOnglet==='resume'){
+    const grid=document.createElement('div');grid.className='kpi-grid';
+    [{l:'Recettes',v:fmt(tR),c:'#1B6B3A',ic:'💰'},{l:'Dépenses',v:fmt(tD),c:'#C0392B',ic:'💸'},{l:'Bénéfice',v:fmt(ben),c:ben>=0?'#1B6B3A':'#C0392B',ic:'📊'},{l:'Crédits dus',v:fmt(Agents.totalDu()),c:'#E8711A',ic:'⏳'}]
+    .forEach(k=>grid.innerHTML+=`<div class="kpi" style="border-top:2px solid ${k.c}"><div class="kpi-ic">${k.ic}</div><div class="kpi-v" style="color:${k.c}">${k.v}</div><div class="kpi-l">${k.l}</div></div>`);
+    f.appendChild(grid);
+    const vj=Agents.ventesJour().reduce((s,v)=>s+v.total,0);
+    const dj=APP.depenses.filter(d=>new Date(d.date).toDateString()===new Date().toDateString()).reduce((s,d)=>s+d.montant,0);
+    const dc=document.createElement('div');dc.className='card';
+    dc.innerHTML=`<div class="ct">📅 Aujourd'hui</div>
+      <div class="lr"><span style="color:#aaa">Ventes</span><span style="color:#7EC8A4;font-weight:600">${fmt(vj)}</span></div>
+      <div class="lr"><span style="color:#aaa">Dépenses</span><span style="color:#E74C3C;font-weight:600">${fmt(dj)}</span></div>
+      <div class="lr" style="border:none"><span style="color:#ccc;font-weight:600">Balance</span><span style="color:${vj-dj>=0?'#7EC8A4':'#E74C3C'};font-weight:700;font-size:14px">${fmt(vj-dj)}</span></div>`;
+    f.appendChild(dc);
+  }
+  if(APP.comptaOnglet==='depenses'){
+    const cats=['Achat marchandise','Loyer','Salaires','Transport','Eau/Électricité','Autres'];
+    const fc=document.createElement('div');fc.className='card';
+    fc.innerHTML=`<div class="ct">➕ Nouvelle dépense</div>`;
+    const li=document.createElement('input');li.className='inp';li.placeholder='Libellé';li.id='dp-l';
+    const mi=document.createElement('input');mi.className='inp';mi.type='number';mi.placeholder='Montant (FCFA)';mi.id='dp-m';
+    const cs=document.createElement('select');cs.className='sel';cs.innerHTML=cats.map(c=>`<option>${c}</option>`).join('');
+    const di=document.createElement('input');di.className='inp';di.type='date';di.value=today();di.style.marginBottom='8px';
+    const bs=document.createElement('button');bs.className='btn br';bs.textContent='Enregistrer la dépense';
+    bs.onclick=()=>{const l=li.value,m=+mi.value;if(!l||!m)return;APP.depenses.push({id:Date.now(),libelle:l,montant:m,cat:cs.value,date:di.value});save();render()};
+    [li,mi,cs,di,bs].forEach(e=>fc.appendChild(e));f.appendChild(fc);
+    [...APP.depenses].reverse().forEach(d=>{
+      const row=document.createElement('div');row.className='card';row.style.cssText='padding:9px 11px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center';
+      row.innerHTML=`<div><div style="color:#ccc;font-size:11px;font-weight:500">${d.libelle}</div><div style="color:#606B76;font-size:9px;margin-top:1px">${d.cat} · ${fdate(d.date)}</div></div>`;
+      const right=document.createElement('div');right.style.cssText='display:flex;align-items:center;gap:8px';
+      right.innerHTML=`<span style="color:#E74C3C;font-weight:700;font-size:12px">−${fmt(d.montant)}</span>`;
+      const bd=document.createElement('button');bd.className='del-btn';bd.textContent='🗑️';
+      bd.onclick=()=>{if(confirm('Supprimer ?')){APP.depenses=APP.depenses.filter(x=>x.id!==d.id);save();render()}};
+      right.appendChild(bd);row.appendChild(right);f.appendChild(row);
+    });
+  }
+  if(APP.comptaOnglet==='journal'){
+    const jc=document.createElement('div');jc.className='card';
+    jc.innerHTML=`<div class="ct">📒 Journal de caisse</div>`;
+    const entries=[
+      ...APP.ventes.map(v=>({type:'recette',lib:`Vente #${v.id} · ${v.client}`,montant:v.total,date:v.date})),
+      ...APP.depenses.map(d=>({type:'dépense',lib:d.libelle,montant:-d.montant,date:d.date+'T00:00:00'})),
+    ].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,25);
+    if(entries.length===0)jc.innerHTML+=`<div style="color:#606B76;text-align:center;padding:16px;font-size:11px">Journal vide</div>`;
+    else entries.forEach(e=>jc.innerHTML+=`<div class="lr" style="font-size:10px"><div><div style="color:${e.type==='recette'?'#7EC8A4':'#E74C3C'}">${e.type==='recette'?'▲':'▼'} ${e.lib}</div><div style="color:#606B76;margin-top:1px">${fdate(e.date)}</div></div><span style="color:${e.montant>=0?'#7EC8A4':'#E74C3C'};font-weight:600">${fmt(Math.abs(e.montant))}</span></div>`);
+    f.appendChild(jc);
+  }
+  return f;
+}
+
+// ════════════════════════════════════════════════════════
+// PRODUITS
+// ════════════════════════════════════════════════════════
+function rProduits(){
+  const f=document.createDocumentFragment();
+  const tr=document.createElement('div');tr.style.cssText='display:flex;gap:7px;margin-bottom:10px';
+  const si=document.createElement('input');si.className='inp';si.style.cssText='margin-bottom:0;flex:1';si.placeholder='🔍 Rechercher...';si.value=APP.prodSearch;
+  si.oninput=e=>{APP.prodSearch=e.target.value;render()};
+  const ab=document.createElement('button');ab.style.cssText='background:#1B6B3A;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:19px;cursor:pointer';ab.textContent='+';
+  ab.onclick=()=>{APP.prodFormVisible=!APP.prodFormVisible;APP.prodEditId=null;APP.prodForm={nom:'',cat:'',prix:'',stock:'',seuil:'',unite:'pièce'};render()};
+  tr.appendChild(si);tr.appendChild(ab);f.appendChild(tr);
+
+  if(APP.prodFormVisible){
+    const fc=document.createElement('div');fc.className='card';
+    fc.innerHTML=`<div class="ct">${APP.prodEditId?'✏️ Modifier':'➕ Nouveau produit'}</div>`;
+    [['Nom du produit','nom','text'],['Catégorie','cat','text'],['Prix (FCFA)','prix','number'],['Stock initial','stock','number'],["Seuil d'alerte",'seuil','number'],['Unité','unite','text']].forEach(([ph,k,t])=>{
+      const i=document.createElement('input');i.className='inp';i.placeholder=ph;i.type=t;i.value=APP.prodForm[k]||'';i.oninput=e=>APP.prodForm[k]=e.target.value;fc.appendChild(i);
+    });
+    const br=document.createElement('div');br.style.cssText='display:flex;gap:7px';
+    const bs=document.createElement('button');bs.className='btn bg';bs.style.flex='1';bs.textContent='Enregistrer';
+    bs.onclick=()=>{
+      const ff=APP.prodForm;if(!ff.nom||!ff.prix)return;
+      if(APP.prodEditId){const p=APP.produits.find(x=>x.id===APP.prodEditId);if(p){p.nom=ff.nom;p.cat=ff.cat;p.prix=+ff.prix;p.stock=+ff.stock;p.seuil=+ff.seuil;p.unite=ff.unite}}
+      else APP.produits.push({id:Date.now(),nom:ff.nom,cat:ff.cat,prix:+ff.prix,stock:+ff.stock,seuil:+ff.seuil,unite:ff.unite||'pièce'});
+      APP.prodFormVisible=false;APP.prodEditId=null;save();render();
+    };
+    const ba=document.createElement('button');ba.className='btn bgr';ba.style.flex='1';ba.textContent='Annuler';
+    ba.onclick=()=>{APP.prodFormVisible=false;render()};
+    br.appendChild(bs);br.appendChild(ba);fc.appendChild(br);f.appendChild(fc);
+  }
+
+  const q=APP.prodSearch.toLowerCase();
+  const fl=APP.produits.filter(p=>p.nom.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q));
+  fl.forEach(p=>{
+    const card=document.createElement('div');card.className='card';
+    card.style.cssText=`border-left:3px solid ${p.stock<=p.seuil?'#E74C3C':'#1B6B3A'};margin-bottom:7px`;
+    card.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px">
+      <div><div style="color:#fff;font-weight:600;font-size:13px">${p.nom}</div><div style="color:#606B76;font-size:10px;margin-top:1px">${p.cat} · ${p.unite}</div></div>
+      <div style="text-align:right"><div style="color:#E8711A;font-weight:700;font-size:13px">${fmt(p.prix)}</div><div style="color:${p.stock<=p.seuil?'#E74C3C':'#7EC8A4'};font-size:10px;margin-top:1px">Stock: ${p.stock}${p.stock<=p.seuil?' ⚠️':''}</div></div>
+    </div>`;
+    const br=document.createElement('div');br.style.cssText='display:flex;gap:5px';
+    const be=document.createElement('button');be.className='btn bgr';be.style.cssText='flex:1;padding:5px 0;font-size:10px';be.textContent='✏️ Modifier';
+    be.onclick=()=>{APP.prodEditId=p.id;APP.prodForm={nom:p.nom,cat:p.cat,prix:p.prix,stock:p.stock,seuil:p.seuil,unite:p.unite};APP.prodFormVisible=true;render()};
+    const bd=document.createElement('button');bd.className='del-btn';bd.textContent='🗑️';
+    bd.onclick=()=>{if(confirm(`Supprimer ${p.nom} ?`)){APP.produits=APP.produits.filter(x=>x.id!==p.id);save();render()}};
+    br.appendChild(be);br.appendChild(bd);card.appendChild(br);f.appendChild(card);
+  });
+  if(fl.length===0){const e=document.createElement('div');e.style.cssText='color:#606B76;text-align:center;padding:24px 0;font-size:12px';e.textContent='Aucun produit';f.appendChild(e)}
+  return f;
+}
+
+// ════════════════════════════════════════════════════════
+// FACTURATION
+// ════════════════════════════════════════════════════════
+function rFacturation(){
+  const f=document.createDocumentFragment();
+  const pills=document.createElement('div');pills.className='pills';
+  [['liste','📋 Liste'],['nouveau','➕ Nouveau'],['config','🏪 Boutique']].forEach(([k,l])=>{
+    const b=document.createElement('button');b.className='pill'+(APP.factOnglet===k?' act':'');
+    b.textContent=l;b.onclick=()=>{APP.factOnglet=k;render()};pills.appendChild(b);
+  });
+  f.appendChild(pills);
+
+  if(APP.factOnglet==='liste'){
+    const tots=APP.factures.reduce((s,x)=>s+x.total,0);
+    const sc=document.createElement('div');sc.className='card';sc.style.display='flex';sc.style.justifyContent='space-between';
+    sc.innerHTML=`<div style="text-align:center"><div style="color:#7EC8A4;font-weight:700;font-size:14px">${APP.factures.length}</div><div style="color:#606B76;font-size:9px">Documents</div></div>
+      <div style="text-align:center"><div style="color:#E8711A;font-weight:700;font-size:14px">${fmt(tots)}</div><div style="color:#606B76;font-size:9px">Total émis</div></div>
+      <div style="text-align:center"><div style="color:#6B3A9E;font-weight:700;font-size:14px">${APP.factures.filter(x=>x.type==='devis').length}</div><div style="color:#606B76;font-size:9px">Devis</div></div>`;
+    f.appendChild(sc);
+
+    if(APP.factures.length===0){
+      const e=document.createElement('div');e.style.cssText='color:#606B76;text-align:center;padding:28px;font-size:12px';
+      e.innerHTML='🧾<br>Aucun document<br><span style="font-size:10px">Créez votre première facture</span>';f.appendChild(e);return f;
+    }
+
+    const ftabs=document.createElement('div');ftabs.className='pills';
+    [['','Tous'],['facture','Factures'],['devis','Devis'],['bl','Bons livraison'],['thermique','Thermiques']].forEach(([k,l])=>{
+      const b=document.createElement('button');b.className='pill'+(APP.factListFiltre===k?' act':'');
+      b.textContent=l;b.onclick=()=>{APP.factListFiltre=k;render()};ftabs.appendChild(b);
+    });
+    f.appendChild(ftabs);
+
+    const liste=APP.factListFiltre?APP.factures.filter(x=>x.type===APP.factListFiltre):APP.factures;
+    [...liste].reverse().forEach(fc=>{
+      const card=document.createElement('div');card.className='card';card.style.cssText='margin-bottom:7px;border-left:3px solid '+typeColor(fc.type);
+      card.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="color:#fff;font-weight:600;font-size:13px">${fc.num}</span>
+        <span class="tag" style="background:${typeColor(fc.type)}">${typeLabel(fc.type)}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+        <span style="color:#aaa;font-size:11px">${fc.client}</span>
+        <span style="color:#E8711A;font-weight:700;font-size:12px">${fmt(fc.total)}</span>
+      </div>
+      <div style="color:#606B76;font-size:9px;margin-bottom:6px">${fdate(fc.date)}</div>`;
+      const br=document.createElement('div');br.style.cssText='display:flex;gap:5px';
+      const bv=document.createElement('button');bv.className='bsm bp';bv.textContent='👁️ Voir';
+      bv.onclick=()=>voirDocument(fc);
+      const bt=fc.type==='facture'||fc.type==='devis'?document.createElement('button'):null;
+      if(bt){bt.className='bsm';bt.style.cssText='background:#1A3A5A;color:#7EC8A4;border-radius:6px;border:none;cursor:pointer;font-family:inherit;padding:5px 9px;font-size:10px';bt.textContent='🖨️ Thermique';bt.onclick=()=>voirThermique(fc)}
+      const bd=document.createElement('button');bd.className='del-btn';bd.textContent='🗑️';
+      bd.onclick=()=>{if(confirm('Supprimer ce document ?')){APP.factures=APP.factures.filter(x=>x.id!==fc.id);save();render()}};
+      br.appendChild(bv);if(bt)br.appendChild(bt);br.appendChild(bd);card.appendChild(br);f.appendChild(card);
+    });
+  }
+
+  if(APP.factOnglet==='config'){
+    const cfg=APP.config;
+    const box=document.createElement('div');box.className='card';
+    const t=document.createElement('div');t.className='ct';t.textContent='🏪 Informations de la Boutique';
+    box.appendChild(t);
+    const sub=document.createElement('div');sub.style.cssText='color:#606B76;font-size:10px;margin-bottom:10px';sub.textContent='Ces informations apparaissent en haut de chaque facture.';
+    box.appendChild(sub);
+    const fields=[
+      ['Nom de la boutique / entreprise *','boutique','text'],
+      ['Adresse','adresse','text'],
+      ['Téléphone','telephone','tel'],
+      ['Email','email','email'],
+    ];
+    fields.forEach(([ph,k,t2])=>{
+      const inp=document.createElement('input');inp.className='inp';inp.type=t2;inp.placeholder=ph;inp.value=cfg[k]||'';
+      inp.addEventListener('input',e=>{APP.config[k]=e.target.value});
+      box.appendChild(inp);
+    });
+    const bsave=document.createElement('button');bsave.className='btn bg';bsave.style.marginTop='10px';bsave.textContent='💾 Enregistrer';
+    bsave.onclick=()=>{const inps=box.querySelectorAll('input.inp');inps.forEach((inp,i)=>APP.config[fields[i][1]]=inp.value.trim());save();render()};
+    box.appendChild(bsave);
+    f.appendChild(box);
+  }
+
+  if(APP.factOnglet==='nouveau'){
+    const ts=document.createElement('div');ts.className='pills';ts.style.marginBottom='10px';
+    [['facture','🧾 Facture'],['devis','📝 Devis'],['bl','📦 Bon Livraison'],['thermique','🖨️ Thermique']].forEach(([k,l])=>{
+      const b=document.createElement('button');b.className='pill'+(APP.factType===k?' act':'');
+      b.textContent=l;b.onclick=()=>{APP.factType=k;render()};ts.appendChild(b);
+    });
+    f.appendChild(ts);
+
+    const fc=document.createElement('div');fc.className='card';
+    const titreDiv=document.createElement('div');titreDiv.className='ct';titreDiv.textContent=typeLabel(APP.factType)+' · Informations';
+    fc.appendChild(titreDiv);
+
+    const clientIn=document.createElement('input');clientIn.className='inp';clientIn.placeholder='Nom client *';clientIn.value=APP.factForm.client||'';
+    clientIn.addEventListener('input',e=>{APP.factForm.client=e.target.value});
+    const telIn=document.createElement('input');telIn.className='inp';telIn.placeholder='Téléphone';telIn.value=APP.factForm.telephone||'';
+    telIn.addEventListener('input',e=>{APP.factForm.telephone=e.target.value});
+    const adrIn=document.createElement('input');adrIn.className='inp';adrIn.placeholder='Adresse';adrIn.value=APP.factForm.adresse||'';
+    adrIn.addEventListener('input',e=>{APP.factForm.adresse=e.target.value});
+    fc.appendChild(clientIn);fc.appendChild(telIn);fc.appendChild(adrIn);
+
+    const artTitre=document.createElement('div');artTitre.className='ct';artTitre.style.marginTop='8px';
+    const artSpan=document.createElement('span');artSpan.textContent='Articles';
+    const artBtn=document.createElement('button');artBtn.className='bsm bg';artBtn.style.fontSize='10px';artBtn.textContent='+ Ajouter';
+    artBtn.onclick=()=>addLigne();
+    artTitre.appendChild(artSpan);artTitre.appendChild(artBtn);
+    fc.appendChild(artTitre);
+
+    const lignesDiv=document.createElement('div');lignesDiv.id='fact-lignes';
+    renderLignes(lignesDiv);fc.appendChild(lignesDiv);
+
+    const optRow=document.createElement('div');optRow.style.cssText='display:flex;gap:6px;margin-top:6px';
+    const tvaIn=document.createElement('input');tvaIn.className='inp';tvaIn.style.marginBottom='0';tvaIn.type='number';tvaIn.placeholder='TVA %';tvaIn.value=APP.factForm.tva;
+    tvaIn.addEventListener('input',e=>{APP.factForm.tva=+e.target.value;updateTotaux()});
+    const remIn=document.createElement('input');remIn.className='inp';remIn.style.marginBottom='0';remIn.type='number';remIn.placeholder='Remise %';remIn.value=APP.factForm.remise;
+    remIn.addEventListener('input',e=>{APP.factForm.remise=+e.target.value;updateTotaux()});
+    optRow.appendChild(tvaIn);optRow.appendChild(remIn);fc.appendChild(optRow);
+
+    const noteIn=document.createElement('textarea');noteIn.className='inp';noteIn.style.cssText='height:50px;resize:none;margin-top:6px';noteIn.placeholder='Note / Conditions de paiement...';noteIn.value=APP.factForm.note||'';
+    noteIn.addEventListener('input',e=>{APP.factForm.note=e.target.value});
+    fc.appendChild(noteIn);
+
+    const sepDiv=document.createElement('div');sepDiv.style.cssText='margin-top:10px;padding-top:8px;border-top:1px solid #2D3748';
+    const totDiv=document.createElement('div');totDiv.id='fact-totaux';
+    renderTotaux(totDiv);
+    sepDiv.appendChild(totDiv);fc.appendChild(sepDiv);
+
+    const bCreate=document.createElement('button');
+    bCreate.className=`btn ${APP.factType==='facture'?'bg':APP.factType==='devis'?'bp':APP.factType==='bl'?'bo':'bb'}`;
+    bCreate.style.marginTop='10px';bCreate.textContent=`✅ Créer ${typeLabel(APP.factType)}`;
+    bCreate.onclick=creerDocument;fc.appendChild(bCreate);
+    f.appendChild(fc);
+  }
+  return f;
+}
+
+function typeColor(t){return{facture:'#1B6B3A',devis:'#6B3A9E',bl:'#E8711A',thermique:'#1A4A7A'}[t]||'#2D3748'}
+function typeLabel(t){return{facture:'🧾 Facture',devis:'📝 Devis',bl:'📦 Bon de Livraison',thermique:'🖨️ Thermique'}[t]||t}
+
+function addLigne(){
+  APP.factForm.lignes.push({desc:'',qte:1,pu:0});
+  const ld=document.getElementById('fact-lignes');if(ld)renderLignes(ld);
+  updateTotaux();
+}
+function removeLigne(i){
+  if(APP.factForm.lignes.length<=1)return;
+  APP.factForm.lignes.splice(i,1);
+  const ld=document.getElementById('fact-lignes');if(ld)renderLignes(ld);
+  updateTotaux();
+}
+function renderLignes(container){
+  container.innerHTML='';
+  container.innerHTML=`<div style="display:grid;grid-template-columns:3fr 1fr 1fr 24px;gap:4px;margin-bottom:4px"><span style="color:#606B76;font-size:9px">Description</span><span style="color:#606B76;font-size:9px">Qté</span><span style="color:#606B76;font-size:9px">P.U (F)</span><span></span></div>`;
+  APP.factForm.lignes.forEach((lg,i)=>{
+    const row=document.createElement('div');row.style.cssText='display:grid;grid-template-columns:3fr 1fr 1fr 24px;gap:4px;margin-bottom:5px';
+    const di=document.createElement('input');di.className='inp';di.style.marginBottom='0';di.placeholder='Article...';di.value=lg.desc;
+    di.oninput=e=>{lg.desc=e.target.value;const p=APP.produits.find(x=>x.nom.toLowerCase()===e.target.value.toLowerCase());if(p)lg.pu=p.prix;updateTotaux()};
+    const qi=document.createElement('input');qi.className='inp';qi.style.marginBottom='0';qi.type='number';qi.min='1';qi.value=lg.qte;qi.oninput=e=>{lg.qte=+e.target.value||1;updateTotaux()};
+    const pi=document.createElement('input');pi.className='inp';pi.style.marginBottom='0';pi.type='number';pi.value=lg.pu;pi.oninput=e=>{lg.pu=+e.target.value||0;updateTotaux()};
+    const bd=document.createElement('button');bd.style.cssText='background:#2D1B1B;color:#E74C3C;border:none;border-radius:4px;cursor:pointer;font-size:12px;height:32px;width:24px';bd.textContent='✕';bd.onclick=()=>removeLigne(i);
+    row.appendChild(di);row.appendChild(qi);row.appendChild(pi);row.appendChild(bd);container.appendChild(row);
+  });
+  const aps=document.createElement('select');aps.className='sel';aps.style.marginBottom='0';aps.style.fontSize='10px';
+  aps.innerHTML='<option value="">+ Ajouter depuis stock...</option>'+APP.produits.map(p=>`<option value="${p.id}">${p.nom} — ${fmt(p.prix)}</option>`).join('');
+  aps.onchange=e=>{
+    const p=APP.produits.find(x=>x.id===+e.target.value);
+    if(!p)return;
+    APP.factForm.lignes.push({desc:p.nom,qte:1,pu:p.prix});
+    renderLignes(container);updateTotaux();aps.value='';
+  };
+  container.appendChild(aps);
+}
+function calcTotaux(){
+  const ht=APP.factForm.lignes.reduce((s,l)=>s+l.qte*l.pu,0);
+  const remise=ht*(APP.factForm.remise/100);
+  const htNet=ht-remise;
+  const tva=htNet*(APP.factForm.tva/100);
+  const ttc=htNet+tva;
+  return{ht,remise,htNet,tva,ttc};
+}
+function updateTotaux(){const td=document.getElementById('fact-totaux');if(td)renderTotaux(td)}
+function renderTotaux(div){
+  const t=calcTotaux();
+  div.innerHTML=`
+    <div class="lr" style="font-size:11px"><span style="color:#aaa">Sous-total HT</span><span style="color:#ccc">${fmt(t.ht)}</span></div>
+    ${APP.factForm.remise>0?`<div class="lr" style="font-size:11px"><span style="color:#aaa">Remise (${APP.factForm.remise}%)</span><span style="color:#E74C3C">−${fmt(t.remise)}</span></div>`:''}
+    ${APP.factForm.tva>0?`<div class="lr" style="font-size:11px"><span style="color:#aaa">TVA (${APP.factForm.tva}%)</span><span style="color:#aaa">${fmt(t.tva)}</span></div>`:''}
+    <div class="lr" style="font-size:14px;border:none;padding-top:8px"><span style="color:#fff;font-weight:700">TOTAL TTC</span><span style="color:#E8711A;font-weight:800">${fmt(t.ttc)}</span></div>`;
+}
+
+function creerDocument(){
+  const ff=APP.factForm;
+  const clientDom=document.querySelector('#content input[placeholder="Nom client *"]');
+  const telDom=document.querySelector('#content input[placeholder="Téléphone"]');
+  const adrDom=document.querySelector('#content input[placeholder="Adresse"]');
+  const noteDom=document.querySelector('#content textarea');
+  if(clientDom)ff.client=clientDom.value.trim();
+  if(telDom)ff.telephone=telDom.value.trim();
+  if(adrDom)ff.adresse=adrDom.value.trim();
+  if(noteDom)ff.note=noteDom.value.trim();
+  if(!ff.client||ff.client===''){alert('Nom client requis');return}
+  if(ff.lignes.every(l=>!l.desc)){alert('Ajoutez au moins un article');return}
+  const t=calcTotaux();
+  const doc={
+    id:Date.now(),num:numFact(),type:APP.factType,
+    client:ff.client,telephone:ff.telephone,adresse:ff.adresse,
+    lignes:[...ff.lignes.filter(l=>l.desc)],
+    remise:ff.remise,tva:ff.tva,note:ff.note,
+    ...t,date:new Date().toISOString()
+  };
+  APP.factures.push(doc);save();
+  APP.factForm={client:'',telephone:'',adresse:'',lignes:[{desc:'',qte:1,pu:0}],remise:0,tva:18,note:''};
+  APP.factOnglet='liste';render();
+  setTimeout(()=>voirDocument(doc),200);
+}
+
+function voirDocument(fc){
+  if(fc.type==='thermique'){voirThermique(fc);return}
+  const html=buildDocHTML(fc);
+  document.getElementById('fact-content').innerHTML=html;
+  document.getElementById('thermal-content').style.display='none';
+  document.getElementById('fact-content').style.display='block';
+  document.getElementById('fact-overlay').style.display='block';
+  window._currentDoc=fc;
+}
+function voirThermique(fc){
+  const html=buildThermalHTML(fc);
+  document.getElementById('thermal-content').innerHTML=html;
+  document.getElementById('thermal-content').style.display='block';
+  document.getElementById('fact-content').style.display='none';
+  document.getElementById('fact-overlay').style.display='block';
+  window._currentDoc=fc;
+}
+function closeFact(){document.getElementById('fact-overlay').style.display='none'}
+function imprimerFact(){
+  const fc=window._currentDoc;if(!fc)return;
+  const pz=document.getElementById('print-zone');
+  pz.innerHTML=fc.type==='thermique'?buildThermalPrint(fc):buildDocPrint(fc);
+  window.print();
+}
+function telechargerFact(){
+  const fc=window._currentDoc;if(!fc)return;
+  const html=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>${fc.num}</title><style>body{font-family:'Segoe UI',sans-serif;background:#f5f5f5;margin:0;padding:20px}@media print{body{background:#fff}}</style></head><body>${buildDocPrint(fc)}</body></html>`;
+  const bl=new Blob([html],{type:'text/html;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download=fc.num+'.html';a.click();
+}
+
+function buildDocHTML(fc){
+  const lignesHTML=fc.lignes.map((l,i)=>`
+    <tr style="background:${i%2===0?'#f9f9f9':'#fff'}">
+      <td style="padding:7px 10px;font-size:12px">${l.desc}</td>
+      <td style="padding:7px 10px;font-size:12px;text-align:center">${l.qte}</td>
+      <td style="padding:7px 10px;font-size:12px;text-align:right">${fmt(l.pu)}</td>
+      <td style="padding:7px 10px;font-size:12px;text-align:right;font-weight:600">${fmt(l.qte*l.pu)}</td>
+    </tr>`).join('');
+  return `<div style="background:#fff;border-radius:10px;padding:20px;color:#000">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+      <div>
+        <div style="font-size:20px;font-weight:900;color:#1B6B3A">${APP.config.boutique||'🌸 Debo-One 🌹'}</div>
+        ${APP.config.adresse?`<div style="font-size:10px;color:#555;margin-top:1px">📍 ${APP.config.adresse}</div>`:''}
+        ${APP.config.telephone?`<div style="font-size:10px;color:#555;margin-top:1px">📞 ${APP.config.telephone}</div>`:''}
+        ${APP.config.email?`<div style="font-size:10px;color:#555;margin-top:1px">✉️ ${APP.config.email}</div>`:''}
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:18px;font-weight:800;color:${typeColor(fc.type)}">${typeLabel(fc.type).replace(/[^\w\s]/g,'').trim().toUpperCase()}</div>
+        <div style="font-size:13px;font-weight:700;margin-top:2px">${fc.num}</div>
+        <div style="font-size:11px;color:#666">${fdate(fc.date)}</div>
+      </div>
+    </div>
+    <div style="background:#f5f5f5;border-radius:8px;padding:10px 12px;margin-bottom:14px">
+      <div style="font-size:11px;color:#666;margin-bottom:3px">CLIENT</div>
+      ${fc.telephone?`<div style="font-size:11px;color:#333;margin-top:1px">📞 ${fc.telephone}</div>`:''}
+      ${fc.adresse?`<div style="font-size:11px;color:#333;margin-top:1px">📍 ${fc.adresse}</div>`:''}
+    </div>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:12px">
+      <thead><tr style="background:#1B6B3A;color:#fff">
+        <th style="padding:8px 10px;font-size:11px;text-align:left">Description</th>
+        <th style="padding:8px 10px;font-size:11px;text-align:center">Qté</th>
+        <th style="padding:8px 10px;font-size:11px;text-align:right">P.U</th>
+        <th style="padding:8px 10px;font-size:11px;text-align:right">Total</th>
+      </tr></thead>
+      <tbody>${lignesHTML}</tbody>
+    </table>
+    <div style="display:flex;justify-content:flex-end">
+      <div style="background:#f5f5f5;border-radius:8px;padding:10px 14px;min-width:200px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0"><span>Sous-total HT</span><span>${fmt(fc.ht)}</span></div>
+        ${fc.remise>0?`<div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0;color:#C0392B"><span>Remise (${fc.remise}%)</span><span>−${fmt(fc.remise)}</span></div>`:''}
+        ${fc.tva>0?`<div style="display:flex;justify-content:space-between;font-size:11px;padding:2px 0"><span>TVA (${fc.tva}%)</span><span>${fmt(fc.tva)}</span></div>`:''}
+        <div style="display:flex;justify-content:space-between;font-size:15px;font-weight:800;border-top:2px solid #1B6B3A;margin-top:6px;padding-top:6px;color:#1B6B3A"><span>TOTAL TTC</span><span>${fmt(fc.ttc)}</span></div>
+      </div>
+    </div>
+    ${fc.note?`<div style="margin-top:12px;padding:10px;background:#fffbf0;border-radius:8px;border-left:3px solid #E8711A"><div style="font-size:10px;color:#666;margin-bottom:3px">NOTE</div><div style="font-size:11px">${fc.note}</div></div>`:''}
+    <div style="margin-top:16px;text-align:center;color:#999;font-size:10px;border-top:1px solid #eee;padding-top:10px">Merci pour votre confiance · ${APP.config.boutique||'Debo-One'} · FCFA</div>
+  </div>`;
+}
+function buildDocPrint(fc){return`<div style="font-family:'Segoe UI',sans-serif;max-width:750px;margin:0 auto;padding:20px;background:#fff;color:#000">${buildDocHTML(fc).replace(/background:#fff;border-radius:10px;padding:20px;color:#000/,'')}</div>`}
+function buildThermalHTML(fc){
+  const lines=fc.lignes.map(l=>`<div style="display:flex;justify-content:space-between;font-size:11px;padding:1px 0"><span>${l.desc} ×${l.qte}</span><span>${fmt(l.qte*l.pu)}</span></div>`).join('');
+  return `<div class="thermal">
+    <div style="text-align:center;font-weight:900;font-size:14px">${APP.config.boutique||"🌸 DEBO-ONE 🌹"}</div>
+    ${APP.config.adresse?`<div style="text-align:center;font-size:10px">${APP.config.adresse}</div>`:""}
+    ${APP.config.telephone?`<div style="text-align:center;font-size:10px">${APP.config.telephone}</div>`:""}
+    <hr>
+    <div style="font-size:10px">Doc: ${fc.num}</div>
+    <div style="font-size:10px">Date: ${fdate(fc.date)}</div>
+    <div style="font-size:10px">Client: ${fc.client}</div>
+    ${fc.telephone?`<div style="font-size:10px">Tel: ${fc.telephone}</div>`:''}
+    <hr>
+    ${lines}
+    <hr>
+    ${fc.remise>0?`<div style="display:flex;justify-content:space-between;font-size:11px"><span>Remise</span><span>−${fmt(fc.remise)}</span></div>`:''}
+    ${fc.tva>0?`<div style="display:flex;justify-content:space-between;font-size:11px"><span>TVA ${fc.tva}%</span><span>${fmt(fc.tva)}</span></div>`:''}
+    <div style="display:flex;justify-content:space-between;font-weight:900;font-size:14px;margin-top:4px"><span>TOTAL</span><span>${fmt(fc.ttc)}</span></div>
+    <hr>
+    <div style="text-align:center;font-size:10px">Merci pour votre visite !</div>
+    <div style="text-align:center;font-size:9px;margin-top:4px">© 2026 Ouedraogo Namketa Omar Bertrand</div>
+  </div>`;
+}
+function buildThermalPrint(fc){return`<div style="max-width:300px;margin:0 auto">${buildThermalHTML(fc)}</div>`}
+
+// ════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════
+APP.factListFiltre='';
+// Initialiser le dernier check si absent
+if(!S.get('debo_last_check'))S.set('debo_last_check',Date.now());
+render();
+
+// ─── Service Worker ───────────────────────────────────
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg=>console.log('SW enregistré:',reg.scope))
+      .catch(err=>console.log('SW erreur:',err));
+  });
+}
+</script>
+</body>
+</html>
